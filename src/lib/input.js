@@ -1,5 +1,5 @@
 import * as Game from "../index";
-import { isEntityInArea } from "./helpers";
+import { isEntityInArea, isVectorInArea } from "./helpers";
 
 const canvas = document.getElementById("canvas");
 
@@ -14,10 +14,14 @@ canvas.addEventListener("mousedown", (e) => {
   if (e.buttons === 1) {
     // Point a and d of all buttons
     // if click is in area of buttons, Game.handleButtons() or something like this
-    // const buttonArea = { a: { x: 5, y: 235 }, d: { x: 100, y: 20 } };
-    // if (isEntityInArea)
+    const clickVector = { x: e.clientX, y: e.clientY };
+    const buttonArea = { a: { x: 5, y: 235 }, d: { x: 5 + 100, y: 235 + 20 } };
 
-    Game.handleLeftClick(e);
+    if (isVectorInArea(clickVector, buttonArea)) {
+      Game.handleUIClick(e);
+    } else {
+      Game.handleLeftClick(e);
+    }
   }
 });
 

@@ -127,6 +127,12 @@ export const handleKey = (e) => {
   }
 };
 
+export const handleUIClick = (e) => {
+  // this definitin is reduntand with input.js one
+  const buttonArea = { a: { x: 5, y: 235 }, d: { x: 5 + 100, y: 235 + 20 } };
+  console.log(buttonArea);
+};
+
 // --- Entity Commands ---
 const dockShipAt = (ship, entity) => {
   if (entity.type === "asteroid") {
