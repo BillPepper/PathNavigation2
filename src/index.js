@@ -76,7 +76,6 @@ export const handleRightClick = (e) => {
   const rightClickItems = getEntityAt(e.clientX, e.clientY);
 
   if (rightClickItems.length > 0) {
-    debugger;
     const rightClickItem = rightClickItems[0];
     const selectedItem = state.selectedEntity;
 

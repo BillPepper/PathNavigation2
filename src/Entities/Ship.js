@@ -43,7 +43,9 @@ export default class Ship extends SpaceEntity {
   }
 
   stop() {
-    this.moving = false;
+    if (this.moving) {
+      this.moving = false;
+    }
   }
 
   flyToRandom() {
@@ -88,21 +90,18 @@ export default class Ship extends SpaceEntity {
         this.nav.points = this.nav.points.slice(1, this.nav.points.length);
       } else {
         // if not already idle but should after plotted path, set it
-        if (!this.idle && this.nav.postArrival === "idle") {
-          this.idle = true;
+
+        if (this.nav.postArrival === "stop") {
+          this.stop();
         } else if (this.nav.postArrival === "dock") {
           this.idle = false;
           this.stop();
         } else if (this.nav.postArrival === "mine") {
           this.idle = false;
           this.stop();
-        }
-
-        // if there still is a nav
-        if (this.idle) {
+        } else if (this.nav.postArrival === "idle") {
+          this.idle = true;
           this.flyToRandom();
-        } else {
-          this.stop();
         }
       }
     }
