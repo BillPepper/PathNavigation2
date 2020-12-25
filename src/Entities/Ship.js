@@ -14,8 +14,8 @@ export default class Ship extends SpaceEntity {
     this._idle = false;
     this._drawNav = false;
     this._nav = {
-      postArrival: "idle",
-      defaultPostArrival: "idle",
+      order: "idle",
+      defaultOrder: "idle",
       points: [{ x: x, y: y }]
     };
   }
@@ -28,18 +28,18 @@ export default class Ship extends SpaceEntity {
       this.nav.points = this.getWaypointsTo(x, y);
       this.moving = true;
       this.drawNav = true;
-      this.nav.postArrival = this.nav.defaultPostArrival;
+      this.nav.order = this.nav.defaultOrder;
     }
   }
 
   dock(station) {
     this.navigate(station.x, station.y);
-    this.nav.postArrival = "dock";
+    this.nav.order = "dock";
   }
 
   mine(asteroid) {
     this.navigate(asteroid.x, asteroid.y);
-    this.nav.postArrival = "mine";
+    this.nav.order = "mine";
   }
 
   stop() {
@@ -91,15 +91,15 @@ export default class Ship extends SpaceEntity {
       } else {
         // if not already idle but should after plotted path, set it
 
-        if (this.nav.postArrival === "stop") {
+        if (this.nav.order === "stop") {
           this.stop();
-        } else if (this.nav.postArrival === "dock") {
+        } else if (this.nav.order === "dock") {
           this.idle = false;
           this.stop();
-        } else if (this.nav.postArrival === "mine") {
+        } else if (this.nav.order === "mine") {
           this.idle = false;
           this.stop();
-        } else if (this.nav.postArrival === "idle") {
+        } else if (this.nav.order === "idle") {
           this.idle = true;
           this.flyToRandom();
         }
