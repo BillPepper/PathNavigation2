@@ -17,10 +17,11 @@ import Ship from "./Entities/Ship";
 import Station from "./Entities/Station";
 
 // UI
-import { renderMap } from "./ui/map";
+import { renderMap } from "./ui/Map";
 
 // Styling
 import "./styles.css";
+import drawShiplist from "./ui/Shiplist";
 
 // State contains temporary settings
 const state = {
@@ -341,7 +342,7 @@ const draw = () => {
     SpaceEntities
   );
 
-  drawShiplist(5, 120);
+  drawShiplist(5, 120, SpaceEntities.ships);
 
   // Button
   renderButton(5, 235, 33.3, 20, "Patrol");
@@ -372,29 +373,6 @@ const drawPause = () => {
       50
     );
   }
-};
-
-const drawShiplist = (x, y) => {
-  const tx = 100;
-  const ty = 100;
-  const lineHeight = 12;
-  const paddingTop = 12;
-  const paddingLeft = 2;
-
-  // Render container
-  rect(x, y, tx, ty, colors.transparentGray);
-
-  SpaceEntities.ships.slice(0, 6).forEach((ship, i) => {
-    const shipDesc = `${ship.name} - ${ship.nav.postArrival}`;
-    text(
-      x + paddingLeft,
-      paddingTop + y + lineHeight * i,
-      shipDesc,
-      false,
-      10,
-      ship.selected ? colors.Mandarin : undefined
-    );
-  });
 };
 
 init();
