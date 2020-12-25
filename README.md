@@ -1,2 +1,2 @@
-# PathNavigation2
+# PathNavigation
 Created with CodeSandbox
