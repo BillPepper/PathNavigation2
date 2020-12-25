@@ -103,38 +103,6 @@ export const handleRightClick = (e) => {
   }
 };
 
-const flySelectedShipsTo = (x, y) => {
-  SpaceEntities.ships.forEach((ship) => {
-    if (ship.selected) {
-      ship.navigate(x, y);
-    }
-  });
-};
-
-const dockSelectedShipsAt = (enity) => {
-  SpaceEntities.ships.forEach((ship) => {
-    if (ship.selected) {
-      ship.dock(enity);
-    }
-  });
-};
-
-const dockSelectedShipAt = (entity) => {
-  if (entity.type === "asteroid") {
-    entity.mine(entity);
-  } else {
-    entity.dock(entity);
-  }
-};
-
-const dockShipAt = (ship, entity) => {
-  if (entity.type === "asteroid") {
-    ship.mine(entity);
-  } else {
-    ship.dock(entity);
-  }
-};
-
 export const handleMouseMove = (e) => {
   state.endClick = {
     x: e.clientX - state.startClick.x,
@@ -170,6 +138,40 @@ export const handleKey = (e) => {
   }
 };
 
+// --- Entity Commands ---
+const dockShipAt = (ship, entity) => {
+  if (entity.type === "asteroid") {
+    ship.mine(entity);
+  } else {
+    ship.dock(entity);
+  }
+};
+
+const dockSelectedShipsAt = (enity) => {
+  SpaceEntities.ships.forEach((ship) => {
+    if (ship.selected) {
+      ship.dock(enity);
+    }
+  });
+};
+
+const dockSelectedShipAt = (entity) => {
+  if (entity.type === "asteroid") {
+    entity.mine(entity);
+  } else {
+    entity.dock(entity);
+  }
+};
+
+const flySelectedShipsTo = (x, y) => {
+  SpaceEntities.ships.forEach((ship) => {
+    if (ship.selected) {
+      ship.navigate(x, y);
+    }
+  });
+};
+
+// --- Game State ---
 const togglePause = () => {
   state.paused = !state.paused;
 };
