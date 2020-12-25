@@ -12,7 +12,7 @@ const drawShiplist = (x, y, shipList) => {
   rect(x, y, tx, ty, colors.transparentGray);
 
   shipList.slice(0, 6).forEach((ship, i) => {
-    const shipDesc = `${ship.name} - ${ship.nav.postArrival}`;
+    const shipDesc = `${ship.name} - ${ship.nav.order}`;
     text(
       x + paddingLeft,
       paddingTop + y + lineHeight * i,
