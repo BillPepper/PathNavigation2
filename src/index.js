@@ -31,7 +31,6 @@ const state = {
   startClick: { x: undefined, y: undefined },
   endClick: { x: undefined, y: undefined },
   orbitTest: [],
-  camera: { x: 0, y: 0 },
   cameraOffset: { vertical: 0, horizontal: 0 }
 };
 
@@ -90,12 +89,12 @@ export const handleRightClick = (e) => {
   if (rightClickItems.length > 0) {
     const rightClickItem = rightClickItems[0];
     const selectedItem = state.selectedEntity;
-
+    debugger;
     if (rightClickItem && selectedItem) {
       // Dock one ship
       if (rightClickItem.type === "asteroid") {
-        // selectedItem.mine(rightClickItem);
-        // console.log("mine");
+        selectedItem.mine(rightClickItem);
+        console.log("mine");
       } else {
         selectedItem.dock(rightClickItem);
         console.log("dock");
@@ -132,38 +131,59 @@ export const handleMouseMove = (e) => {
 export const handleKey = (e) => {
   switch (e.key) {
     case "ArrowUp":
-      if (state.cameraOffset.vertical >= 1) {
-        state.cameraOffset.vertical--;
-        moveCamera(0, config.cameraScrollSpeed);
-      }
+      movCamUp();
       break;
     case "ArrowDown":
-      const maxScrollsY = getMaxScrolls().y;
-      if (state.cameraOffset.vertical < maxScrollsY) {
-        state.cameraOffset.vertical++;
-        moveCamera(0, config.cameraScrollSpeed * -1);
-      }
+      movCamDown();
 
       break;
     case "ArrowLeft":
-      if (state.cameraOffset.horizontal >= 1) {
-        state.cameraOffset.horizontal--;
-        moveCamera(config.cameraScrollSpeed, 0);
-      }
+      movCamLeft();
       break;
     case "ArrowRight":
-      const maxScrollsX = getMaxScrolls().x;
-      if (state.cameraOffset.horizontal < maxScrollsX) {
-        state.cameraOffset.horizontal++;
-        moveCamera(config.cameraScrollSpeed * -1, 0);
-      }
+      movCamRight();
       break;
     case "Escape":
-      state.paused = !state.paused;
+      togglePause();
       break;
     default:
       console.log("key not assigned", e.key);
       break;
+  }
+};
+
+const togglePause = () => {
+  state.paused = !state.paused;
+};
+
+// --- Camera ---
+const movCamUp = () => {
+  if (state.cameraOffset.vertical >= 1) {
+    state.cameraOffset.vertical--;
+    moveCamera(0, config.cameraScrollSpeed);
+  }
+};
+
+const movCamDown = () => {
+  const maxScrollsY = getMaxScrolls().y;
+  if (state.cameraOffset.vertical < maxScrollsY) {
+    state.cameraOffset.vertical++;
+    moveCamera(0, config.cameraScrollSpeed * -1);
+  }
+};
+
+const movCamLeft = () => {
+  if (state.cameraOffset.horizontal >= 1) {
+    state.cameraOffset.horizontal--;
+    moveCamera(config.cameraScrollSpeed, 0);
+  }
+};
+
+const movCamRight = () => {
+  const maxScrollsX = getMaxScrolls().x;
+  if (state.cameraOffset.horizontal < maxScrollsX) {
+    state.cameraOffset.horizontal++;
+    moveCamera(config.cameraScrollSpeed * -1, 0);
   }
 };
 
