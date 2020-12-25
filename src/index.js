@@ -22,6 +22,7 @@ import { renderMap } from "./ui/Map";
 // Styling
 import "./styles.css";
 import drawShiplist from "./ui/Shiplist";
+import Ships from "./data/Ships";
 
 // State contains temporary settings
 const state = {
@@ -205,14 +206,14 @@ const movCamRight = () => {
 };
 
 // --- Selection ---
-const getEntityAt = (clickX, clickY) => {
+const getEntityAt = (x, y) => {
   const entities = mergeEntities();
 
   let clickedEntities = [];
   for (let i = 0; i < entities.length; i++) {
     if (
-      isInRange(entities[i].size, clickX, entities[i].x) &&
-      isInRange(entities[i].size, clickY, entities[i].y)
+      isInRange(entities[i].size, x, entities[i].x) &&
+      isInRange(entities[i].size, y, entities[i].y)
     ) {
       clickedEntities.push(entities[i]);
     }
@@ -270,12 +271,9 @@ const init = () => {
   // init ships
   if (config.shipsEnabled) {
     console.log("Creating ships");
-    createShip("EZ-100", 500, 300, 2);
-    createShip("AK-886", 100, 10, 0.8);
-    createShip("HG-239", 400, 200, 0.3);
-    createShip("SK-945", 100, 400, 1);
-    createShip("TT-934", 100, 600, 0.8);
-    createShip("UT-223", 600, 600, 0.3);
+    Ships.forEach((ship) => {
+      createShip(ship.name, ship.x, ship.y, ship.speed);
+    });
   }
 
   // Debugging stuff
