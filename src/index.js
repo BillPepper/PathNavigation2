@@ -27,7 +27,7 @@ import Ships from "./data/Ships";
 // State contains temporary settings
 const state = {
   paused: false,
-  selectedEntity: undefined,
+  selectedEntities: [],
   selectBoxEnabled: false,
   startClick: { x: undefined, y: undefined },
   endClick: { x: undefined, y: undefined },
@@ -46,7 +46,7 @@ const SpaceEntities = {
 // --- INPUT ---
 export const handleLeftClick = (e) => {
   resetSelection();
-  // Select with click
+
   const entity = getEntityAt(e.clientX, e.clientY);
 
   // Select with rectangle
@@ -55,7 +55,7 @@ export const handleLeftClick = (e) => {
 
   if (entity.length > 0) {
     entity[0].selected = true;
-    state.selectedEntity = entity[0];
+    selectionAdd(entity[0]);
   } else {
     resetSelection();
   }
@@ -63,7 +63,6 @@ export const handleLeftClick = (e) => {
   // Path plotting
   if (e.ctrlKey) {
     // try to get ref of ship here
-
     state.nav.points.push({ x: e.clientX, y: e.clientY });
   }
 };
@@ -89,7 +88,8 @@ export const handleRightClick = (e) => {
   // Check if ship should dock or mine
   if (rightClickItems.length > 0) {
     const rightClickItem = rightClickItems[0];
-    const selectedItem = state.selectedEntity;
+    // const selectedItem = state.selectedEntity;
+    const selectedItem = state.selectedEntities[0]; // FIX ME: will only select the first elem
 
     if (rightClickItem && selectedItem) {
       // Dock one ship
@@ -171,6 +171,22 @@ const flySelectedShipsTo = (x, y) => {
   });
 };
 
+const getEntityAt = (x, y) => {
+  const entities = mergeEntities();
+
+  let clickedEntities = [];
+  for (let i = 0; i < entities.length; i++) {
+    if (
+      isInRange(entities[i].size, x, entities[i].x) &&
+      isInRange(entities[i].size, y, entities[i].y)
+    ) {
+      clickedEntities.push(entities[i]);
+    }
+  }
+
+  return clickedEntities;
+};
+
 // --- Game State ---
 const togglePause = () => {
   state.paused = !state.paused;
@@ -208,7 +224,7 @@ const movCamRight = () => {
 };
 
 // --- Selection ---
-const getEntityAt = (x, y) => {
+const selectEntityAt = (x, y) => {
   const entities = mergeEntities();
 
   let clickedEntities = [];
@@ -217,7 +233,7 @@ const getEntityAt = (x, y) => {
       isInRange(entities[i].size, x, entities[i].x) &&
       isInRange(entities[i].size, y, entities[i].y)
     ) {
-      clickedEntities.push(entities[i]);
+      entities[i].selected = true;
     }
   }
 
@@ -234,17 +250,20 @@ const selectEntities = () => {
     // if entity[i] location is inside the vertecies
     if (isEntityInArea(entities[i], verticies, state.cameraOffset)) {
       entities[i].selected = true;
-      console.log(`${entities[i].name} is in area`);
     }
   }
 };
 
 const resetSelection = () => {
   const entities = mergeEntities();
-  state.selectedEntity = undefined;
+  state.selectedEntities = [];
   for (let i = 0; i < entities.length; i++) {
     entities[i].selected = false;
   }
+};
+
+const selectionAdd = (entity) => {
+  state.selectedEntities.push(entity);
 };
 
 // --- Entity Creation ---
