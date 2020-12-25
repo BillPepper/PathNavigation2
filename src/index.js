@@ -4,7 +4,12 @@ import "./lib/input";
 
 // Helpers
 import { moveCamera, rect, rectStroke, text } from "./lib/render";
-import { getMaxScrolls, getRectVertecies, isInRange } from "./lib/helpers";
+import {
+  getMaxScrolls,
+  getRectVertecies,
+  isEntityInArea,
+  isInRange
+} from "./lib/helpers";
 
 // Entities
 import Asteroid from "./Entities/Asteroid";
@@ -22,8 +27,8 @@ const state = {
   paused: false,
   selectedEntity: undefined,
   selectBoxEnabled: false,
-  startClick: { x: 0, y: 0 },
-  endClick: { x: 0, y: 0 },
+  startClick: { x: undefined, y: undefined },
+  endClick: { x: undefined, y: undefined },
   orbitTest: [],
   camera: { x: 0, y: 0 },
   cameraOffset: { vertical: 0, horizontal: 0 }
@@ -57,7 +62,6 @@ export const handleLeftClick = (e) => {
   // Path plotting
   if (e.ctrlKey) {
     // try to get ref of ship here
-    debugger;
 
     state.nav.points.push({ x: e.clientX, y: e.clientY });
   }
@@ -69,12 +73,19 @@ export const handleLeftUp = (e) => {
     y: e.clientY
   };
   state.selectBoxEnabled = false;
-  selectEntities();
+
+  // prevent failure from undefined rect select
+  if (state.startClick.x && state.startClick.y) {
+    if (state.endClick.x && state.endClick.y) {
+      selectEntities();
+    }
+  }
 };
 
 export const handleRightClick = (e) => {
   const rightClickItems = getEntityAt(e.clientX, e.clientY);
 
+  // Check if ship should dock or mine
   if (rightClickItems.length > 0) {
     const rightClickItem = rightClickItems[0];
     const selectedItem = state.selectedEntity;
@@ -82,8 +93,8 @@ export const handleRightClick = (e) => {
     if (rightClickItem && selectedItem) {
       // Dock one ship
       if (rightClickItem.type === "asteroid") {
-        selectedItem.mine(rightClickItem);
-        console.log("mine");
+        // selectedItem.mine(rightClickItem);
+        // console.log("mine");
       } else {
         selectedItem.dock(rightClickItem);
         console.log("dock");
@@ -97,7 +108,7 @@ export const handleRightClick = (e) => {
       });
     }
   } else {
-    // Fly to nav point
+    // Fly selected ships to cursor pos
     SpaceEntities.ships.forEach((ship) => {
       if (ship.selected) {
         ship.navigate(e.clientX, e.clientY);
@@ -180,13 +191,9 @@ const selectEntities = () => {
     const verticies = getRectVertecies(state.startClick, state.endClick);
 
     // if entity[i] location is inside the vertecies
-    if (
-      entities[i].x > verticies.a.x + 20 * state.cameraOffset.horizontal &&
-      entities[i].x < verticies.d.x + 20 * state.cameraOffset.horizontal &&
-      entities[i].y > verticies.a.y + 20 * state.cameraOffset.vertical &&
-      entities[i].y < verticies.d.y + 20 * state.cameraOffset.vertical
-    ) {
+    if (isEntityInArea(entities[i], verticies, state.cameraOffset)) {
       entities[i].selected = true;
+      console.log(`${entities[i].name} is in area`);
     }
   }
 };

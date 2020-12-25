@@ -92,3 +92,13 @@ export const getMaxScrolls = () => {
     (config.map.height - config.resolution.height) / config.cameraScrollSpeed;
   return { x: maxX, y: maxY };
 };
+
+export const isEntityInArea = (entity, areaVectors, camOffset) => {
+  // append " + 20 * camOffset.horizontal && " for cam offset
+  return (
+    entity.x > areaVectors.a.x &&
+    entity.x < areaVectors.d.x &&
+    entity.y > areaVectors.a.y &&
+    entity.y < areaVectors.d.y
+  );
+};
