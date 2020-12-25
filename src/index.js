@@ -89,31 +89,48 @@ export const handleRightClick = (e) => {
   if (rightClickItems.length > 0) {
     const rightClickItem = rightClickItems[0];
     const selectedItem = state.selectedEntity;
-    debugger;
+
     if (rightClickItem && selectedItem) {
       // Dock one ship
-      if (rightClickItem.type === "asteroid") {
-        selectedItem.mine(rightClickItem);
-        console.log("mine");
-      } else {
-        selectedItem.dock(rightClickItem);
-        console.log("dock");
-      }
+      dockShipAt(selectedItem, rightClickItem);
     } else {
       // Dock multiple ships
-      SpaceEntities.ships.forEach((ship) => {
-        if (ship.selected) {
-          ship.dock(rightClickItem);
-        }
-      });
+      dockSelectedShipsAt(rightClickItem);
     }
   } else {
-    // Fly selected ships to cursor pos
-    SpaceEntities.ships.forEach((ship) => {
-      if (ship.selected) {
-        ship.navigate(e.clientX, e.clientY);
-      }
-    });
+    flySelectedShipsTo(e.clientX, e.clientY);
+  }
+};
+
+const flySelectedShipsTo = (x, y) => {
+  SpaceEntities.ships.forEach((ship) => {
+    if (ship.selected) {
+      ship.navigate(x, y);
+    }
+  });
+};
+
+const dockSelectedShipsAt = (enity) => {
+  SpaceEntities.ships.forEach((ship) => {
+    if (ship.selected) {
+      ship.dock(enity);
+    }
+  });
+};
+
+const dockSelectedShipAt = (entity) => {
+  if (entity.type === "asteroid") {
+    entity.mine(entity);
+  } else {
+    entity.dock(entity);
+  }
+};
+
+const dockShipAt = (ship, entity) => {
+  if (entity.type === "asteroid") {
+    ship.mine(entity);
+  } else {
+    ship.dock(entity);
   }
 };
 
