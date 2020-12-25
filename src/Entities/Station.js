@@ -23,6 +23,8 @@ class Station extends SpaceEntity {
     }
   }
 
+  showVacancy() {}
+
   update() {}
 
   draw() {
@@ -32,6 +34,7 @@ class Station extends SpaceEntity {
       this.size,
       this.selected ? colors.Mandarin : colors.GreenWeb
     );
+    this.showVacancy();
   }
 
   get docks() {

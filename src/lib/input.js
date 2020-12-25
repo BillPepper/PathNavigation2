@@ -1,4 +1,5 @@
 import * as Game from "../index";
+import { isEntityInArea } from "./helpers";
 
 const canvas = document.getElementById("canvas");
 
@@ -12,8 +13,9 @@ canvas.addEventListener("contextmenu", (e) => {
 canvas.addEventListener("mousedown", (e) => {
   if (e.buttons === 1) {
     // Point a and d of all buttons
-    // const buttonArea = { a: { x: 0, y: 0 }, d: { x: 0, y: 0 } };
     // if click is in area of buttons, Game.handleButtons() or something like this
+    // const buttonArea = { a: { x: 5, y: 235 }, d: { x: 100, y: 20 } };
+    // if (isEntityInArea)
 
     Game.handleLeftClick(e);
   }

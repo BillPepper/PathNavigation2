@@ -95,10 +95,20 @@ export const getMaxScrolls = () => {
 
 export const isEntityInArea = (entity, areaVectors, camOffset) => {
   // append " + 20 * camOffset.horizontal && " for cam offset
+  const vector = { x: entity.x, y: entity.y };
+  const area = {
+    a: { x: areaVectors.a.x, y: areaVectors.a.y },
+    d: { x: areaVectors.d.x, y: areaVectors.d.y }
+  };
+
+  return isVectorInArea(vector, area);
+};
+
+export const isVectorInArea = (vector, area) => {
   return (
-    entity.x > areaVectors.a.x &&
-    entity.x < areaVectors.d.x &&
-    entity.y > areaVectors.a.y &&
-    entity.y < areaVectors.d.y
+    vector.x > area.a.x &&
+    vector.x < area.d.x &&
+    vector.y > area.a.y &&
+    vector.y < area.d.y
   );
 };

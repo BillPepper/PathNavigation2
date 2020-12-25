@@ -63,7 +63,6 @@ export const handleLeftClick = (e) => {
     // try to get ref of ship here
     state.nav.points.push({ x: e.clientX, y: e.clientY });
   }
-  console.log("ent", state.selectedEntities);
 };
 
 export const handleLeftUp = (e) => {
@@ -404,6 +403,7 @@ const draw = () => {
   renderButton(5, 235, 33.3, 20, "Patrol");
   renderButton(33.3 + 5, 235, 33.3, 20, "Idle");
   renderButton(66.6 + 5, 235, 33.3, 20, "Stop");
+  rectStroke(5, 235, 100, 20, "#ff00ff");
 
   // const test = { x: 300, y: 300 };
   // circ(test.x, test.y, 3, "#ff00ff");

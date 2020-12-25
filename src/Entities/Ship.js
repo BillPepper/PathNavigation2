@@ -12,6 +12,7 @@ export default class Ship extends SpaceEntity {
     this._speedMult = 0.25;
     this._moving = true;
     this._idle = false;
+    this._docked = false;
     this._drawNav = false;
     this._nav = {
       order: "idle",
@@ -34,7 +35,7 @@ export default class Ship extends SpaceEntity {
 
   dock(station) {
     this.navigate(station.x, station.y);
-    this.nav.order = "dock";
+    this.nav.order = "docking";
   }
 
   mine(asteroid) {
@@ -63,25 +64,31 @@ export default class Ship extends SpaceEntity {
     );
   }
 
-  update() {
-    super.updateOrbit();
-
-    const nextNav = this.nav.points[0];
-    // Move ship towards next nav
+  moveStepTowardsNav(nav) {
     if (this.moving && this.nav.points.length > 0) {
-      if (this.x < nextNav.x) {
+      if (this.x < nav.x) {
         this.x += this.speed * this.speedMult;
       }
-      if (this.x > nextNav.x) {
+      if (this.x > nav.x) {
         this.x -= this.speed * this.speedMult;
       }
-      if (this.y < nextNav.y) {
+      if (this.y < nav.y) {
         this.y += this.speed * this.speedMult;
       }
-      if (this.y > nextNav.y) {
+      if (this.y > nav.y) {
         this.y -= this.speed * this.speedMult;
       }
     }
+  }
+
+  update() {
+    if (config.renderShipOrbit) {
+      super.updateOrbit();
+    }
+
+    const nextNav = this.nav.points[0];
+    this.moveStepTowardsNav(nextNav);
+
     // on arrival at nav
     if (this.hasArrivedAt(nextNav.x, nextNav.y)) {
       // nav's left?
@@ -90,10 +97,9 @@ export default class Ship extends SpaceEntity {
         this.nav.points = this.nav.points.slice(1, this.nav.points.length);
       } else {
         // if not already idle but should after plotted path, set it
-
         if (this.nav.order === "stop") {
           this.stop();
-        } else if (this.nav.order === "dock") {
+        } else if (this.nav.order === "docking") {
           this.idle = false;
           this.stop();
         } else if (this.nav.order === "mine") {
@@ -146,7 +152,6 @@ export default class Ship extends SpaceEntity {
         // When path is plottet, the active route is rendered differently
         const color = i === 0 ? colors.Mandarin : colors.Silver;
         if (lastNav) {
-          // line(lastNav.x, lastNav.y, navPoint.x, navPoint.y, color);
           line(lastNav.x, lastNav.y, navPoint.x, navPoint.y, color);
         } else {
           // Calculate a rectangle
@@ -227,6 +232,14 @@ export default class Ship extends SpaceEntity {
 
   set idle(v) {
     this._idle = v;
+  }
+
+  get docked() {
+    return this._docked;
+  }
+
+  set docked(v) {
+    this._docked = v;
   }
 
   get drawNav() {
