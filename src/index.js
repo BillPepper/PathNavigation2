@@ -27,7 +27,6 @@ import Ships from "./data/Ships";
 // State contains temporary settings
 const state = {
   paused: false,
-  selectedEntities: [],
   selectBoxEnabled: false,
   startClick: { x: undefined, y: undefined },
   endClick: { x: undefined, y: undefined },
@@ -47,15 +46,14 @@ const SpaceEntities = {
 export const handleLeftClick = (e) => {
   resetSelection();
 
-  const entity = getEntityAt(e.clientX, e.clientY);
-
   // Select with rectangle
   state.startClick = { x: e.clientX, y: e.clientY };
   state.endClick = { x: e.clientX, y: e.clientY };
 
+  const entity = getEntityAt(e.clientX, e.clientY);
+
   if (entity.length > 0) {
     entity[0].selected = true;
-    selectionAdd(entity[0]);
   } else {
     resetSelection();
   }
@@ -65,6 +63,7 @@ export const handleLeftClick = (e) => {
     // try to get ref of ship here
     state.nav.points.push({ x: e.clientX, y: e.clientY });
   }
+  console.log("ent", state.selectedEntities);
 };
 
 export const handleLeftUp = (e) => {
@@ -83,21 +82,12 @@ export const handleLeftUp = (e) => {
 };
 
 export const handleRightClick = (e) => {
-  const rightClickItems = getEntityAt(e.clientX, e.clientY);
+  const rightClickEntity = getEntityAt(e.clientX, e.clientY)[0];
+  const selectedShips = getSelectedShips();
 
-  // Check if ship should dock or mine
-  if (rightClickItems.length > 0) {
-    const rightClickItem = rightClickItems[0];
-    // const selectedItem = state.selectedEntity;
-    const selectedItem = state.selectedEntities[0]; // FIX ME: will only select the first elem
-
-    if (rightClickItem && selectedItem) {
-      // Dock one ship
-      dockShipAt(selectedItem, rightClickItem);
-    } else {
-      // Dock multiple ships
-      dockSelectedShipsAt(rightClickItem);
-    }
+  if (rightClickEntity) {
+    console.log("mine/dock");
+    dockSelectedShipsAt(rightClickEntity);
   } else {
     flySelectedShipsTo(e.clientX, e.clientY);
   }
@@ -147,10 +137,14 @@ const dockShipAt = (ship, entity) => {
   }
 };
 
-const dockSelectedShipsAt = (enity) => {
+const dockSelectedShipsAt = (entity) => {
   SpaceEntities.ships.forEach((ship) => {
     if (ship.selected) {
-      ship.dock(enity);
+      if (entity.type === "asteroid") {
+        ship.mine(entity);
+      } else {
+        ship.dock(entity);
+      }
     }
   });
 };
@@ -262,8 +256,14 @@ const resetSelection = () => {
   }
 };
 
-const selectionAdd = (entity) => {
-  state.selectedEntities.push(entity);
+const getSelectedShips = () => {
+  const ships = [];
+  SpaceEntities.ships.forEach((ship) => {
+    if (ship.selected) {
+      ships.push(ship);
+    }
+  });
+  return ships;
 };
 
 // --- Entity Creation ---
