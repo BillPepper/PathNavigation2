@@ -1,17 +1,21 @@
 import { circ } from "../lib/render";
 import SpaceEntity from "./SpaceEntity";
 import colors from "../lib/colors";
+import { generateOrbitNavs } from "../lib/helpers";
 
 class Station extends SpaceEntity {
   constructor(name, x, y, size) {
     super(name, "station", x, y, size);
-    this._docks = [];
+    this._docks = generateOrbitNavs(this.x, this.y, this.size, 4);
+    this._dockedShips = [];
     this._maxDockableShips = 3; // it's 4 but arrays start at one...
   }
 
   canShipDock() {
-    return this.docks.length < this.maxDockableShips;
+    return this._dockedShips.length < this.maxDockableShips;
   }
+
+  getFreeDockslot() {}
 
   dockShip(ship) {
     // this ints the dock stuff, add ship ref
@@ -23,26 +27,22 @@ class Station extends SpaceEntity {
     }
   }
 
-  showVacancy() {}
+  drawDockSlots() {
+    this._docks.forEach((dock) => {
+      circ(dock.x, dock.y, 2);
+    });
+  }
 
   update() {}
 
   draw() {
+    this.drawDockSlots();
     circ(
       this.x,
       this.y,
       this.size,
       this.selected ? colors.Mandarin : colors.GreenWeb
     );
-    this.showVacancy();
-  }
-
-  get docks() {
-    return this._docks;
-  }
-
-  set docks(v) {
-    this._docks = v;
   }
 
   get maxDockableShips() {

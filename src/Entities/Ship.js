@@ -34,8 +34,12 @@ export default class Ship extends SpaceEntity {
   }
 
   dock(station) {
-    this.navigate(station.x, station.y);
-    this.nav.order = "docking";
+    if (station.canShipDock()) {
+      this.navigate(station.x, station.y);
+      this.nav.order = "docking";
+    } else {
+      console.log("Dock permission denied, no free dock");
+    }
   }
 
   mine(asteroid) {
