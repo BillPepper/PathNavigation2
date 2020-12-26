@@ -35,7 +35,9 @@ export default class Ship extends SpaceEntity {
 
   dock(station) {
     if (station.canShipDock()) {
-      this.navigate(station.x, station.y);
+      const designatedSlot = station.getFreeDockslotNav();
+      station.dockShip(this);
+      this.navigate(designatedSlot.x, designatedSlot.y);
       this.nav.order = "docking";
     } else {
       console.log("Dock permission denied, no free dock");
