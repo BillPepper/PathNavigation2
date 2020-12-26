@@ -308,6 +308,7 @@ const init = () => {
 
   if (config.asteroidsEnabled) {
     console.log("Creating asteroids");
+    createAsteroid(510, 100);
     createAsteroid(505, 115);
     createAsteroid(515, 125);
     createAsteroid(525, 110);

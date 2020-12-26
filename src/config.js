@@ -14,6 +14,7 @@ export default {
   selectionRange: 1,
   renderShipNames: false,
   renderShipOrbit: false,
+  renderStationNames: false,
 
   // Debug Settings
   debugEnabled: true,

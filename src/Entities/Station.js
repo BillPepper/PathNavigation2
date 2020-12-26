@@ -1,7 +1,8 @@
-import { circ } from "../lib/render";
+import { circ, text } from "../lib/render";
 import SpaceEntity from "./SpaceEntity";
 import colors from "../lib/colors";
 import { generateOrbitNavs } from "../lib/helpers";
+import config from "../config";
 
 class Station extends SpaceEntity {
   constructor(name, x, y, size) {
@@ -36,10 +37,19 @@ class Station extends SpaceEntity {
     });
   }
 
+  drawStationName() {
+    // could be in SpaceEntity
+    if (config.renderStationNames || this.selected) {
+      const offset = -26; //px
+      text(this.x, this.y + offset, this.name, true, 10);
+    }
+  }
+
   update() {}
 
   draw() {
     this.drawDockSlots();
+    this.drawStationName();
     circ(
       this.x,
       this.y,
