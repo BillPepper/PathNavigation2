@@ -9,5 +9,6 @@ export default //Color Palette
   DirtBrown: "#5D2209",
   ShadowGray: "#222",
   white: "white",
-  transparentGray: "#99999977"
+  transparentGray: "#99999977",
+  spaceBlack: "#111218"
 };

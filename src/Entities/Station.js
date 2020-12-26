@@ -6,7 +6,7 @@ import { generateOrbitNavs } from "../lib/helpers";
 class Station extends SpaceEntity {
   constructor(name, x, y, size) {
     super(name, "station", x, y, size);
-    this._docks = generateOrbitNavs(this.x, this.y, this.size + 0.5, 4);
+    this._dockLocations = generateOrbitNavs(this.x, this.y, this.size + 0.5, 4);
     this._dockedShips = [];
     this._maxDockableShips = 3; // it's 4 but arrays start at one...
   }
@@ -16,10 +16,8 @@ class Station extends SpaceEntity {
   }
 
   getFreeDockslotNav() {
-    return this._docks[this._dockedShips.length];
+    return this._dockLocations[this._dockedShips.length];
   }
-
-  dockShipAt(slot) {}
 
   dockShip(ship) {
     // this ints the dock stuff, add ship ref
@@ -33,7 +31,7 @@ class Station extends SpaceEntity {
   }
 
   drawDockSlots() {
-    this._docks.forEach((dock) => {
+    this._dockLocations.forEach((dock) => {
       circ(dock.x, dock.y, 2);
     });
   }

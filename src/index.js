@@ -357,7 +357,7 @@ const draw = () => {
     0 + camOffset.vertical * camSpeed,
     config.resolution.width + camSpeed * camOffset.vertical,
     res.height,
-    colors.SpaceCadet
+    colors.spaceBlack
   );
 
   // Map border

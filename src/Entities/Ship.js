@@ -24,11 +24,9 @@ export default class Ship extends SpaceEntity {
   navigate(x, y) {
     if (x && y) {
       this.moving = false;
-      this.drawNav = false;
       this.clearNav();
       this.nav.points = this.getWaypointsTo(x, y);
       this.moving = true;
-      this.drawNav = true;
       this.nav.order = this.nav.defaultOrder;
     }
   }
