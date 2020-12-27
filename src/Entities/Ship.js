@@ -21,6 +21,7 @@ export default class Ship extends SpaceEntity {
     };
   }
 
+  // --- Nagigation Commands
   navigate(x, y) {
     if (x && y) {
       this.moving = false;
@@ -29,43 +30,6 @@ export default class Ship extends SpaceEntity {
       this.moving = true;
       this.nav.order = this.nav.defaultOrder;
     }
-  }
-
-  dock(station) {
-    if (station.canShipDock()) {
-      const designatedSlot = station.getFreeDockslotNav();
-      station.dockShip(this);
-      this.navigate(designatedSlot.x, designatedSlot.y);
-      this.nav.order = "docking";
-    } else {
-      console.log("Dock permission denied, no free dock");
-    }
-  }
-
-  mine(asteroid) {
-    this.navigate(asteroid.x, asteroid.y);
-    this.nav.order = "mine";
-  }
-
-  stop() {
-    if (this.moving) {
-      this.moving = false;
-    }
-  }
-
-  flyToRandom() {
-    this.nav.points = this.getRandomWaypointsTo(this.x, this.y);
-  }
-
-  clearNav() {
-    this.nav.points = [];
-  }
-
-  hasArrivedAt(x, y) {
-    return (
-      isInRange(config.collisionWidth, this.y, y) &&
-      isInRange(config.collisionWidth, this.x, x)
-    );
   }
 
   moveStepTowardsNav(nav) {
@@ -85,6 +49,68 @@ export default class Ship extends SpaceEntity {
     }
   }
 
+  stop() {
+    if (this.moving) {
+      this.moving = false;
+    }
+  }
+
+  flyToRandom() {
+    this.nav.points = this.getRandomWaypointsTo(this.x, this.y);
+  }
+
+  // --- Docklike Commands
+  dock(station) {
+    if (station.canShipDock()) {
+      const designatedSlot = station.getFreeDockslotNav();
+      station.dockShip(this);
+      this.navigate(designatedSlot.x, designatedSlot.y);
+      this.nav.order = "docking";
+    } else {
+      console.log("Dock permission denied, no free dock");
+    }
+  }
+
+  mine(asteroid) {
+    this.navigate(asteroid.x, asteroid.y);
+    this.nav.order = "mine";
+  }
+
+  // --- Nav Commands
+  clearNav() {
+    this.nav.points = [];
+  }
+
+  hasArrivedAt(x, y) {
+    return (
+      isInRange(config.collisionWidth, this.y, y) &&
+      isInRange(config.collisionWidth, this.x, x)
+    );
+  }
+
+  // move this to helpers
+  getRandomWaypointsTo(x, y) {
+    return calcWaypoints([
+      { x: this.x, y: this.y },
+      {
+        x: getRandom(20, config.map.width - 20),
+        y: getRandom(20, config.map.height - 20)
+      }
+    ]);
+  }
+
+  // move this to helpers
+  getWaypointsTo(x, y) {
+    return calcWaypoints([
+      { x: this.x, y: this.y },
+      {
+        x: x,
+        y: y
+      }
+    ]);
+  }
+
+  // --- Cycle Commands ---
   update() {
     if (config.renderShipOrbit) {
       super.updateOrbit();
@@ -115,28 +141,6 @@ export default class Ship extends SpaceEntity {
         }
       }
     }
-  }
-
-  // move this to helpers
-  getRandomWaypointsTo(x, y) {
-    return calcWaypoints([
-      { x: this.x, y: this.y },
-      {
-        x: getRandom(20, config.map.width - 20),
-        y: getRandom(20, config.map.height - 20)
-      }
-    ]);
-  }
-
-  // move this to helpers
-  getWaypointsTo(x, y) {
-    return calcWaypoints([
-      { x: this.x, y: this.y },
-      {
-        x: x,
-        y: y
-      }
-    ]);
   }
 
   draw() {

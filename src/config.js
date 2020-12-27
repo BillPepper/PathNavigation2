@@ -19,7 +19,7 @@ export default {
   // Debug Settings
   debugEnabled: true,
   debugRenderLineDesc: false,
-  debugRenderTriLines: true,
+  debugRenderTriLines: true, // doesn't work anyway
   debugRenderOrbit: false,
 
   // Map Settings
@@ -27,6 +27,7 @@ export default {
   mapPadding: 5,
   mapSize: 10,
   mapDotMultiplier: 2, // times
+
   // Camera Settings
   cameraScrollSpeed: 20
 };
