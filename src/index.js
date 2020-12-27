@@ -12,17 +12,19 @@ import {
 } from "./lib/helpers";
 
 // Entities
-import Asteroid from "./Entities/Asteroid";
 import Ship from "./Entities/Ship";
+import Asteroid from "./Entities/Asteroid";
 import Station from "./Entities/Station";
 
 // UI
 import { renderMap } from "./ui/Map";
+import drawShiplist from "./ui/Shiplist";
+
+// Data
+import Ships from "./data/Ships";
 
 // Styling
 import "./styles.css";
-import drawShiplist from "./ui/Shiplist";
-import Ships from "./data/Ships";
 
 // State contains temporary settings
 const state = {
@@ -304,7 +306,7 @@ const init = () => {
 
   // Debugging stuff
   const ez = SpaceEntities.ships[0];
-  // ez.nav.postArrival = "stop";
+  ez.nav.order = "stop";
 
   if (config.asteroidsEnabled) {
     console.log("Creating asteroids");

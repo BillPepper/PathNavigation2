@@ -25,7 +25,6 @@ class Station extends SpaceEntity {
     // and pobably some trading stuff
     if (ship) {
       console.log(`${this.name} acknowledged dock of ${ship.name}`);
-      this._dockedShips.push(ship);
     } else {
       console.log(`Docking failed at ${this.name}`);
     }
